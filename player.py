@@ -2,12 +2,14 @@ import pygame
 from constants import *
 from circleshape import CircleShape
 from shot import Shot
+from bomb import Bomb
 
 class Player(CircleShape):
     def __init__(self, x,y):
         super().__init__(x, y,PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_timer = 0
+        self.bomb_timer = 0
 
         self.acceleration = 250
         self.max_speed = 300
@@ -28,6 +30,7 @@ class Player(CircleShape):
     def update(self, dt):
         self.warp_around(dt)
         self.shoot_timer -= dt
+        self.bomb_timer -= dt
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_a]:
@@ -49,6 +52,15 @@ class Player(CircleShape):
 
         if keys[pygame.K_SPACE]:
             self.shoot()
+
+        if keys[pygame.K_b]:
+            self.bomb_place()
+
+    def bomb_place(self):
+        if self.bomb_timer > 0:
+            return
+        self.bomb_timer = PLAYER_BOMB_COOLDOWN
+        bomb = Bomb(self.position.x, self.position.y)
 
     def shoot(self):
         if self.shoot_timer > 0:
