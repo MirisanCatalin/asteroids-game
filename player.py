@@ -26,6 +26,7 @@ class Player(CircleShape):
         return [a, b, c]
 
     def update(self, dt):
+        self.warp_around(dt)
         self.shoot_timer -= dt
         keys = pygame.key.get_pressed()
 
