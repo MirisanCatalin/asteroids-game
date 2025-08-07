@@ -9,6 +9,16 @@ from shot import Shot
 
 def main():
     pygame.init()
+
+    score = 0
+    score_font = pygame.font.SysFont("comicsans", 30)
+
+    lives = 3
+    lives_font = pygame.font.SysFont("comicsans", 30)
+
+    game_over = False
+    game_over_font = pygame.font.SysFont("comicsans", 70)
+
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
@@ -28,7 +38,7 @@ def main():
 
     dt = 0
 
-    while True:
+    while lives != 0:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -37,19 +47,38 @@ def main():
 
         for asteroid in asteroids:
             if asteroid.collides_with(player):
-                print("Game over!")
-                sys.exit()
+                lives -= 1
+                asteroid.kill()
+                for ast in asteroids:
+                    ast.kill()
+                player.respawn()
+
+                if lives == 0:
+                    sys.exit()
 
         for asteroid in asteroids:
             for bullet in shots:
                 if asteroid.collides_with(bullet):
                     bullet.kill()
                     asteroid.kill()
+                    score += 10
+
+
+
 
         screen.fill("black")
 
         for obj in drawable:
             obj.draw(screen)
+
+        score_surface = score_font.render(f"Score: {score}", True, (255, 255, 255))
+        score_rect = score_surface.get_rect()
+        score_rect.topleft = (10, 10)
+        screen.blit(score_surface, score_rect)
+
+        lives_surface = lives_font.render(f"Lives: {lives}", True, (255, 255, 255))
+        lives_rect = lives_surface.get_rect(topright=(SCREEN_WIDTH - 10, 10))
+        screen.blit(lives_surface, lives_rect)
 
         pygame.display.flip()
 

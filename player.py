@@ -49,3 +49,9 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+
+    def respawn(self):
+        self.position.x = SCREEN_WIDTH / 2
+        self.position.y = SCREEN_HEIGHT / 2
+        self.rotation = 0
+        self.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SPEED
