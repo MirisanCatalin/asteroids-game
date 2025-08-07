@@ -9,6 +9,10 @@ class Player(CircleShape):
         self.rotation = 0
         self.shoot_timer = 0
 
+        self.acceleration = 250
+        self.max_speed = 300
+        self.friction = 0.5
+
     def draw(self,screen):
         pygame.draw.polygon(screen,'white',self.triangle(),2)
 
@@ -29,10 +33,19 @@ class Player(CircleShape):
             self.rotate(-dt)
         if keys[pygame.K_d]:
             self.rotate(dt)
+
+        if self.velocity.length() > self.max_speed:
+            self.velocity.scale_to_length(self.max_speed)
+
+        self.velocity *= self.friction
+
+        self.position += self.velocity * dt
+
         if keys[pygame.K_w]:
             self.move(dt)
         if keys[pygame.K_s]:
             self.move(-dt)
+
         if keys[pygame.K_SPACE]:
             self.shoot()
 

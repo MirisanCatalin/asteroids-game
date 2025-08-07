@@ -54,7 +54,7 @@ def main():
                 player.respawn()
 
                 if lives == 0:
-                    sys.exit()
+                    break
 
         for asteroid in asteroids:
             for bullet in shots:
@@ -62,9 +62,6 @@ def main():
                     bullet.kill()
                     asteroid.kill()
                     score += 10
-
-
-
 
         screen.fill("black")
 
@@ -79,6 +76,23 @@ def main():
         lives_surface = lives_font.render(f"Lives: {lives}", True, (255, 255, 255))
         lives_rect = lives_surface.get_rect(topright=(SCREEN_WIDTH - 10, 10))
         screen.blit(lives_surface, lives_rect)
+
+        pygame.display.flip()
+
+        # limit the framerate to 60 FPS
+        dt = clock.tick(60) / 1000
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+
+        updatable.update(dt)
+
+        screen.fill("black")
+        game_over_surface = game_over_font.render("Game Over!", True, (255, 255, 255))
+        game_over_rect = game_over_surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        screen.blit(game_over_surface, game_over_rect)
 
         pygame.display.flip()
 
